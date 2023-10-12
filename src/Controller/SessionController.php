@@ -22,8 +22,8 @@ class SessionController extends AbstractController
     public function index(SessionRepository $sessionRepository): Response
     {
 
-        $sessions = $sessionRepository->findAll();
-
+        $sessions = $sessionRepository->findAll();//affiche la liste des session
+        //redirection vers liste session
         return $this->render('session/index.html.twig', [
             'sessions' => $sessions,
         ]);
@@ -33,7 +33,7 @@ class SessionController extends AbstractController
     public function listeStagiaire(StagiaireRepository $stagiaireRepository): Response
     {
 
-        $stagiaires = $stagiaireRepository->findAll();
+        $stagiaires = $stagiaireRepository->findAll(); //recupère la 
 
         return $this->render('session/listeStagiaire.html.twig', [
             'stagiaires' => $stagiaires,

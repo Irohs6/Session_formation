@@ -166,5 +166,9 @@ class Stagiaire
         return $this->nom." ".$this->prenom;
     }
 
-    
+    public function getAge()
+    {
+        
+    }
+
 }

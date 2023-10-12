@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail d'une session{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Liste des Sessions </h1>
+    
+    <ul>
+        {% for session in sessions %}
+        <li>        
+            <a href="{{ path('app_detailProgramme', {'id': session.id})}}">{{session}}</a>                      
+        </li>        
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

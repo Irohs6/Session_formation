@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des modules{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+   <h1>Liste des Modules</h1>
+
+    <ul>
+        {% for module in modules %}
+            <li>
+                {{module}}
+            </li>
+        {% endfor %}
+  
+    </ul>
+</div>
+{% endblock %}

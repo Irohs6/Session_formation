@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail d'une session{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+
+    <h1>Détail du programme d'une session {{session}}</h1>
+
+    <p>
+        du {{session.dateDebut | date('m/d/Y')}} au {{session.dateFin | date('m/d/Y')}} {#affiche la date de debut et de fin de la session#}
+    </p>
+  
+    <p>Détail des modules:</p>
+    <ul>
+        {% for programme in session.programmes %}
+            <p>{{programme.module.category}}</p>
+            <li>   
+               <h3>{{programme.module}} </h3>
+               <p>Durée {{programme.nbJours}} jours</p>
+                 
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

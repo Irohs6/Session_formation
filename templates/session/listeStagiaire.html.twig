@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des stagiaire{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+   <h1>Liste des stagiaire</h1>
+
+    <ul>
+        {% for stagiaire in stagiaires %}
+            <li>
+                <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}}</a>
+            </li>
+        {% endfor %}
+  
+    </ul>
+</div>
+{% endblock %}

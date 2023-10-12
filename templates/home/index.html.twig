@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos formation dispensée{% endblock %}
+
+{% block body %}
+
+
+<div class="example-wrapper">
+    <h1>Liste de nos Formation</h1>
+
+    <ul>
+        {% for formation in formations %}
+        
+        <li>
+            <a href="{{ path('app_listeSessionParFormation', {'id': formation.id})}}">{{formation}}: nombre de session disponible: {{ (formation.sessions)|length }}</a> 
+        </li>
+            
+        {% endfor %}
+    </ul>
+   
+</div>
+{% endblock %}

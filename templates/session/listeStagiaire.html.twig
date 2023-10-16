@@ -4,16 +4,18 @@
 
 {% block body %}
 
-<div class="example-wrapper">
+<div class="container">
    <h1>Liste des stagiaire</h1>
 
     <ul>
         {% for stagiaire in stagiaires %}
             <li>
                 <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}}</a>
+                <a class="btn btn-warning" href="{{ path('edit_stagiaire',{'id':stagiaire.id}) }}">Edit</a>
             </li>
         {% endfor %}
   
     </ul>
+    <a href="{{ path('new_stagiaire') }}">Ajouter une stagiaire</a>
 </div>
 {% endblock %}

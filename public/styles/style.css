@@ -3,6 +3,127 @@
     padding: 0;
     box-sizing: border-box;
 }
-table,td,tr{
-    border: 1px solid black;
+a{
+    text-decoration: none;
+    color: black;
+}
+
+h1{
+    padding: 10px;
+    text-align: center;
+}
+
+main{
+    min-height: 80vh;
+}
+.button{
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    width: 300px;
+    height: 80px;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 15px;
+    border: 3px solid #156786;
+    background: rgba(19, 136, 85, 0.20);
+    text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+}
+nav{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: #156983;
+    height: 100px;
+    align-items: center;
+    
+}
+footer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: #156983;
+    height: 100px;
+    align-items: center;
+    
+}
+
+nav ul{
+    display: flex;
+    list-style: none;
+    width: 95%;
+    justify-content: space-evenly;  
+}
+
+nav ul a {
+    color: #ECE8E8;
+    font-size: 24px;
+}
+nav figure{
+
+    height: 100%;
+}
+nav figure img{
+    height: 100%;
+    vertical-align: bottom;
+}
+/**********Home******************/
+.containerBis{
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 3px solid #14776F;
+    border-left: 3px solid #14776F;
+    background: rgba(217, 217, 217, 0.00);
+    width: 95%;
+    max-width: 1400px;
+}
+.detail_formation{
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    line-height: normal;
+    list-style: none;
+    padding: 10px;
+}
+
+/*******************Table de session*************************/
+.detailProgramme{
+    height: 60px;
+    width: 60px;
+}
+table{
+    display: flex;
+    flex-direction: row;
+    align-items: center;  
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/***********detail progrmame d'une session*/
+.information{
+    text-align: center;
+}
+ul li.detailModule{
+    width: 95%;
+    border-top: 2px solid #156983;
+    border-left: 2px solid #156983;
+    background: rgba(20, 123, 105, 0.50);
+    list-style: none;
+}
+
+li p a{
+    margin-left: 86%;
+}
+
+p.detailModule{
+    width: 95%;
+    border-top: 2px solid #156983;
+    border-left: 2px solid #156983;
+    background: rgba(20, 123, 105, 0.50);
+    list-style: none;    
 }

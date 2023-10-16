@@ -3,25 +3,41 @@
 {% block title %}Détail d'une session{% endblock %}
 
 {% block body %}
-
+{% set category = "" %}
 <div class="example-wrapper">
 
     <h1>Détail du programme d'une session {{session}}</h1>
 
-    <p>
-        du {{session.dateDebut | date('m/d/Y')}} au {{session.dateFin | date('m/d/Y')}} {#affiche la date de debut et de fin de la session#}
-    </p>
+    <p class="information">du {{session.dateDebut | date('m/d/Y')}} au {{session.dateFin | date('m/d/Y')}} {#affiche la date de debut et de fin de la session#}</p>
   
-    <p>Détail des modules:</p>
+    <p class="information">Détail des modules:</p>
     <ul>
         {% for programme in session.programmes %}
-            <p>{{programme.module.category}}</p>
-            <li>   
-               <h3>{{programme.module}} </h3>
-               <p>Durée {{programme.nbJours}} jours</p>
+            {% if programme.module.category != category %}
+                 {% set category = programme.module.category %}
+            
+                <p><b>{{ programme.module.category }}:</b></p>
+                {% endif %}
+            <li class="detailModule">   
+               <p>Module: <h3>{{ programme.module }} </h3></p>
+               <p>Durée {{programme.nbJours}} jours  <a class="btn btn-warning" href="{{ path('edit_programme',{'id':programme.id}) }}">Modifier le programme</a></p>
                  
+              
             </li>
+           
+            
         {% endfor %}
+        
     </ul>
+    
+    <p class="detailModule">
+        Liste des personnes inscrite <br>
+        {% for stagiaire in session.stagiaires %}
+            
+                <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}} ;</a>
+            
+        {% endfor %}
+    </p>
+    <a class="button" href="{{ path('edit_session',{'id': session.id}) }}">Modifier la session</a>
 </div>
 {% endblock %}

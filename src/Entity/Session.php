@@ -38,6 +38,10 @@ class Session
     #[ORM\OneToMany(mappedBy: 'session', targetEntity: Programme::class)]
     private Collection $programmes;
 
+    #[ORM\ManyToOne(inversedBy: 'sessions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->stagiaires = new ArrayCollection();
@@ -166,5 +170,17 @@ class Session
     public function __toString()
     {
         return $this->intitule;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

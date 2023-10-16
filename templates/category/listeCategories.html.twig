@@ -4,16 +4,18 @@
 
 {% block body %}
 
-<div class="example-wrapper">
+<div class="container">
    <h1>Liste des categories</h1>
 
     <ul>
         {% for categorie in categories %}
             <li>
                 {{categorie}}
+                <a class="btn btn-warning" href="{{ path('edit_category',{'id': categorie.id}) }}">Edit</a> 
             </li>
         {% endfor %}
   
     </ul>
+    <a class="button" href="{{ path('new_category') }}">Ajouter une Category</a>
 </div>
 {% endblock %}

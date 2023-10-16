@@ -7,6 +7,7 @@
     <div class="example-wrapper">
 
         <h1>Fiche d'information satgiaire</h1>
+        <a class="btn btn-warning" href="{{ path('edit_stagiaire',{'id':stagiaire.id}) }}">Edit</a>
         <h2>{{ stagiaire }}</h2>
 
         <p>Ville: {{ stagiaire.ville }}</p>
@@ -14,14 +15,13 @@
         <p>Tel: {{ stagiaire.tel }}</p>
         <p>Date de Naissance: {{ stagiaire.dateNaissance | date('m/d/Y')}}</p>
         <p>Genre: {{ stagiaire.genre }}</p>
-
+        <p>Age: {{ stagiaire.age }} ans.</p>
         <p>Liste des sessions inscrite:</p>
         {% for session in stagiaire.sessions %}
             <a href="{{ path('app_detailProgramme', {'id': session.id})}}"><p>{{ session }} du {{ session.dateDebut | date('m/d/Y')}} au {{ session.dateFin | date('m/d/Y')}}</p></a>
-        {% endfor %}
-    
-        
+        {% endfor %} 
         </ul>
+        
     </div>
 
 {% endblock %}

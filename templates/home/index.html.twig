@@ -5,18 +5,23 @@
 {% block body %}
 
 
-<div class="example-wrapper">
-    <h1>Liste de nos Formation</h1>
+<h1>Liste de nos Formation disponible</h1>
+<div class="containerBis">
 
     <ul>
+        {# formations = les données reçu du controlleur contenant tous la table formation #}
         {% for formation in formations %}
         
-        <li>
-            <a href="{{ path('app_listeSessionParFormation', {'id': formation.id})}}">{{formation}}: nombre de session disponible: {{ (formation.sessions)|length }}</a> 
+        <li class="detail_formation">
+            {# lien pour affiché la liste des session de cet formation #}
+            <a href="{{ path('app_listeSessionParFormation', {'id': formation.id})}}"><b>{{formation}}:</b>
+            <br> <p>nombre de session disponible: {{ (formation.sessions)|length }} disponible allant de l’initiation a des formations diplômante.</p>{#pour compter le nombre de session disponible#}Info</a> 
+            {# lien pour editer une formation #}
+            <a class="btn btn-warning" href="{{ path('edit_formation',{'id': formation.id}) }}">Edit</a>           
         </li>
-            
         {% endfor %}
     </ul>
-   
+    {# lien pour ajouter une nouvelle formation #}
+    <a class="button" href="{{ path('new_formation') }}">Ajouter une formation</a>
 </div>
 {% endblock %}

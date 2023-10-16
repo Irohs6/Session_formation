@@ -168,7 +168,9 @@ class Stagiaire
 
     public function getAge()
     {
-        
+        $now = new \DateTime();
+        $interval = $this->dateNaissance->diff($now);
+        return $interval->format("%Y");
     }
 
 }

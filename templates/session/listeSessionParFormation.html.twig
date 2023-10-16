@@ -4,33 +4,36 @@
 
 {% block body %}
 
-<div class="example-wrapper">
+<div class="container">
 
-    <h1>Liste des sessions pour cet formation {{formation}}</h1>
-
-        <table id="table">
-            <tr>
-                <td>Intitule</td>
-                <td>Date de début</td>
-                <td>Date de fin</td>
-                <td>Nb de place totale</td>
-                <td>Nb de place restante</td>
-                <td>Détail du programme</td>
-            </tr>
-        {% for session in formation.sessions %}
-            <tr>
-                <td>{{session}}</td>
-                <td>{{session.dateDebut | date('d/m/Y')}}</td>
-                <td>{{session.dateFin | date('d/m/Y')}}</td>
-                <td>{{session.nbPlaceTotal}}</td>
-                <td>{{ session.nbPlaceTotal - session.stagiaires|length }}</td>
-                <td><a href="{{ path('app_detailProgramme', {'id': session.id})}}"><img src="../../public/img/detail_programme.jpg" alt="Détail du programmes"></a></td>
-             
-            </tr> 
-                   
-        {% endfor %}
-    </table>
-   
-
+    <h1>Liste des sessions pour la formation {{formation}}</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-success table-striped"">
+                <tr>
+                    <td>Intitule</td>
+                    <td>Date de début</td>
+                    <td>Date de fin</td>
+                    <td>Nb de place totale</td>
+                    <td>Nb de place restante</td>
+                    <td>Détail du programme</td>
+                </tr>
+                {% for session in formation.sessions %}
+                    <tr>
+                        <td>{{session}}</td>
+                        <td>{{session.dateDebut | date('d/m/Y')}}</td>
+                        <td>{{session.dateFin | date('d/m/Y')}}</td>
+                        <td>{{session.nbPlaceTotal}}</td>
+                        <td>{{ session.nbPlaceTotal - session.stagiaires|length }}</td>
+                        <td>
+                            <a href="{{ path('app_detailProgramme', {'id': session.id})}}"><img class="detailProgramme" src="{{ asset('img/detail_programme.jpg')}}" alt="Détail du programmes"></a>
+                            <a class="btn btn-warning" href="{{ path('edit_session',{'id': session.id}) }}">Edit</a>
+                        </td>
+                    
+                    </tr> 
+                        
+                {% endfor %}
+            </table>
+        </div>
+        <a class="button" href="{{ path('new_session') }}">Ajouter une Session</a>
 </div>
 {% endblock %}

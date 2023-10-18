@@ -10,31 +10,41 @@
         <h1>Ajouter une Session</h1>
     {% endif %}
     
-    {{ form_start(formSession) }}
+    {{ form_start(form) }}
         
-                {{ form_row(formSession.nbPlaceTotal) }}
-                {{ form_row(formSession.dateDebut) }}
-                {{ form_row(formSession.dateFin) }}
-                {{ form_row(formSession.intitule) }}
-                {{ form_row(formSession.formation) }}
-               
-
-                {% for stagiaire in formSession.stagiaires %}
-
-                    {{ form_row(stagiaire) }}
-              
-                {% endfor %}   
-                
-                {# {% for programme in formSession.programmes %}
-                
-                    {{ form_row(programme) }}
-                
-                {% endfor %}
-
-                {{ form_row(formProgrammeSession.module) }} #}
-
-            
-          
-    {{ form_end(formSession) }}
+        {{ form_row(form.nbPlaceTotal) }}
+        {{ form_row(form.dateDebut) }}
+        {{ form_row(form.dateFin) }}
+        {{ form_row(form.intitule) }}
+        {# {{ form_row(form.formation) }} #}
+        
+        {# on va construire dynamiquement la liste des modules existants a partir de Programme #}
+        <h2>Programme de la Session:</h2>
+        <div class="form-group row ">
+            <div class="col-form-label col-sm-2">&nbsp;</div>
+            <div id="programme-fields-list" class="col-sm-10 remove-collection-widget"
+                data-prototype="{{ form_widget(form.programmes.vars.prototype)|e }}"
+                data-session="{{sessionId}}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ form.programmes|length }}">
+            {% for programmeField in form.programmes %}
+                <p>
+                    {{ form_errors(programmeField) }}
+                    {{ form_widget(programmeField, {'attr': {'class': 'borders'}}) }}
+                </p>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="form-group row flex-action">
+            <button type="button" 
+                class="add-another-collection-widget button"
+                data-list-selector="#programme-fields-list">Ajouter un nouveau module</button>
+        </div>
+    
+     
+    
+        {# empêche l'apparition d'une légende "programmes", si la collection est vide (en cas de création d'une nouvelle session) #}
+        {% do form.programmes.setRendered %}
+    {{ form_end(form) }}
 </div>
 {% endblock %}

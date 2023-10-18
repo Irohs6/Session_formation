@@ -21,7 +21,7 @@
             <a href="{{ path('app_detailProgramme', {'id': session.id})}}"><p>{{ session }} du {{ session.dateDebut | date('m/d/Y')}} au {{ session.dateFin | date('m/d/Y')}}</p></a>
         {% endfor %} 
         </ul>
-        
+        <a href="{{ path('app_addSession', {'id': stagiaire.id})}}">Ajouter une session</a> ne fonctionne pas
     </div>
 
 {% endblock %}

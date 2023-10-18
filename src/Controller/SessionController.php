@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
-
 use App\Entity\Session;
 use App\Entity\Formation;
 use App\Entity\Programme;
-use App\Entity\Stagiaire;
 use App\Form\SessionType;
+use App\Form\AddStagiaire;
 use App\Form\FormationType;
 use App\Form\ProgrammeType;
-use App\Form\StagiaireType;
-use App\Form\ProgrammeSessionType;
-use App\Form\SessionStagiaireType;
+use App\Form\ModuleSessionType;
+use App\Form\AddModulesSessionType;
+use App\Repository\FormationRepository;
 use App\Repository\SessionRepository;
-use App\Repository\StagiaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,18 +33,7 @@ class SessionController extends AbstractController
         ]);
     }
 
-    //Function pour afficher la liste des stagiaires****************************************************
-    //chemin d'accès de la page https://127.0.0.1:8000/liste_stagiaires
-    #[Route('liste_stagiaires', name: 'app_listeStagiaire')]
-    public function listeStagiaire(StagiaireRepository $stagiaireRepository): Response
-    {
-        $stagiaires = $stagiaireRepository->findAll(); //recupère toute les données de la table stagiaire
-        //renvoie le résultat vers le template session/listeStagiaire
-        return $this->render('session/listeStagiaire.html.twig', [
-            'stagiaires' => $stagiaires,
-        ]);
-    }
-
+   
 //*Pour afficher le programme d'une session******************************************************************** */
 //chemin d'acès a la page  https://127.0.0.1:8000/session/detail1  
     #[Route('/session/detail{id}', name: 'app_detailProgramme')]
@@ -70,15 +57,7 @@ class SessionController extends AbstractController
         ]);
     }    
 
-    //Function pour afficher le détail d'un stagiaire par son id ***************************************/
-    #[Route('detailStagiaire{id}', name: 'app_detailStagiaire')]
-    public function detailStagiaire(Stagiaire $stagiaire): Response
-    {
-        //renvoie le détail d'un Stagiaire vers le template detailStagiaire
-        return $this->render('session/detailStagiaire.html.twig', [
-            'stagiaire' => $stagiaire,
-        ]);
-    }  
+   
 
     //Function pour ajouter et editer une nouvelle formation*******************************************************
     #[Route('formation/new', name: 'new_formation')]
@@ -109,30 +88,38 @@ class SessionController extends AbstractController
         return $this->render('session/new_formation.html.twig', [
             'form' => $form,//pour la creation du formulaire 
             'edit' => $formation->getId()//renvoie edit vers le template du formulaire pour pouvoir définir si edit ou add
+            
         ]);
     }
 
-/******Ajout et Modification d'une session********************** */
-    #[Route('session/new', name: 'new_session')]
+/******Ajout et Modification d'une session*********************************************** */
+    #[Route('session/{idFormation}/new', name: 'new_session')]
     #[Route('session/{id}/edit', name: 'edit_session')]
-    public function newsession(Session $session =null, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        //si session n,'existe pas creer une nouvelle instance
+    public function newsession(Session $session = null, Request $request, EntityManagerInterface $entityManager, FormationRepository $formationRepository): Response
+    {   
+        
+        //si session n'existe pas creer une nouvelle instance
+        
         if(!$session){
-            $session = new Session();
+            $session = new Session();  
+            $idFormation = $request->attributes->get('idFormation');
+            $formation = $formationRepository->findOneBy(['id'=> $idFormation]);
+        }else{
+            $formation = $session->getFormation();
         }
-
-        // $programmeSession = new Programme();
+    
+        $session->setFormation($formation);
         $form = $this->createForm(SessionType::class, $session);//creer le formulaire
-       
+        
         //recupère les données du formulaire si il a été soumis et validé
         $form->handleRequest($request);
         //si le formulaire est soumit et valide 
         if ($form->isSubmitted() && $form->isValid()) {
+    
             //récupère les donné du formulaire 
             $session = $form->getData();
             // prepare PDO la requete insert ou update
-             $entityManager->persist($session);
+            $entityManager->persist($session);
             // execute PDO la requete insert ou update
             $entityManager->flush();
             
@@ -141,72 +128,99 @@ class SessionController extends AbstractController
         }
         // sinon return sur le formulaire pour corriger les ereur
         return $this->render('session/new_session.html.twig', [
-            'formSession' => $form,
+            'form' => $form,
             'edit' => $session->getId(),
-        ]);
-    }
-/*******************Ajout et Modification d'un stagiaire******************************************* */
-    #[Route('stagiaire/new', name: 'new_stagiaire')]
-    #[Route('stagiaire/{id}/edit', name: 'edit_stagiaire')]
-    public function newStagiaire(Stagiaire $stagiaire = null, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        //si stagiaire n'est pas vrais creer une nouvelle instance
-        if(!$stagiaire){
-            $stagiaire = new Stagiaire();
-        }
-       
-        $form = $this->createForm(StagiaireType::class, $stagiaire);//créer le formulaire 
-        //recupère les données du formulaire si il a été soumis et les valide
-        $form->handleRequest($request);
-
-        //si le formulaire est soumit et qu'il est valide 
-        if ($form->isSubmitted() && $form->isValid()) {
-             //recdupère les données 
-            $stagiaire = $form->getData();
-            // prepare la requete avec les données du formaulaire
-            $entityManager->persist($stagiaire);
-            // execute PDO la requete
-            $entityManager->flush();
-            //redirige vers la liste des stagiaire
-            return $this->redirectToRoute('app_detailStagiaire',['id'=>$stagiaire->getId()]);
-        }
-        //sinon return sur le formulaire pour corriger les ereur
-        return $this->render('session/new_stagiaire.html.twig', [
-            'formStagiaire' => $form,// pour la création du formulaire
-            'edit' => $stagiaire->getId(),//envoit l'id de stafiaire pour confirmer si modifier ou ajouter          
+            'sessionId' => $session->getId(),
         ]);
     }
 
-    //pour modifier ou ajouter un nouveau programme
-    #[Route('programme/new', name: 'new_programme')]
-    #[Route('Programme/{id}/edit', name: 'edit_programme')]
-    public function newProgramme(Programme $programme = null, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        //si programme n'existe pas on crer une nouvelle instance
-        if(!$programme){
-            $programme = new Programme();
-        }
+// //pour modifier ou ajouter un nouveau programme*****************************************************
+//     #[Route('programme/new', name: 'new_programme')]
+//     #[Route('Programme/{id}/edit', name: 'edit_programme')]
+//     public function newProgramme(Programme $programme = null, Request $request, EntityManagerInterface $entityManager): Response
+//     {
+//         //si programme n'existe pas on crer une nouvelle instance
+//         if(!$programme){
+//             $programme = new Programme();
+//         }
 
-        $form = $this->createForm(ProgrammeType::class, $programme);//creer le formulaire
+//         $form = $this->createForm(ProgrammeType::class, $programme);//creer le formulaire
+//         //recupère les données du formulaire si il a été soumis et validé
+//         $form->handleRequest($request);
+
+//         //si le formulaire est soumit et qu'il est valide 
+//         if ($form->isSubmitted() && $form->isValid()) {
+//             $id=$programme->getId();
+//              //recdupère les données 
+//             $programme = $form->getData();
+//             // prepare la requete avec les données du formaulaire
+//             $entityManager->persist($programme);
+//             // execute PDO la requete
+//             $entityManager->flush();
+//             //redirige  ver la liste des session
+//             return $this->redirectToRoute('app_detailProgramme',['id' => $programme->getSession()->getId()]);
+//         }
+//         //return au formulaire pour corriger les erreur
+//         return $this->render('session/new_programme.html.twig', [
+//             'formProgramme' => $form,
+//             'edit' => $programme->getId(),
+//         ]);
+//     }
+
+/*************ajout ou retraitt  de stagiaire a une session*********************************************************** */
+    #[Route('addStagiaire/{id}', name: 'app_addStagiaire')]
+    public function addStagiaire(Session $session, Request $request, EntityManagerInterface $entityManager)
+    { 
+        $formAddStagiaire = $this->createForm(AddStagiaire::class, $session);//creer le formulaire
         //recupère les données du formulaire si il a été soumis et validé
+        $formAddStagiaire->handleRequest($request);
+        //si le formulaire est soumit et valide 
+        
+        if ($formAddStagiaire->isSubmitted() && $formAddStagiaire->isValid()) {
+            //récupère les donné du formulaire 
+            $data = $formAddStagiaire->getData();
+            
+           // Les stagiaires sélectionnées sont maintenant dans $data->getStagiaires()
+            // on peux les ajouter au session
+            foreach ($data->getStagiaires() as $stagiaire) {
+                $session->addStagiaire($stagiaire);
+            }
+            // prepare PDO la requete insert ou update
+            $entityManager->persist($session);
+            // execute PDO la requete insert ou update
+            $entityManager->flush();
+            $this->addFlash('success', 'Sessions ajoutées avec succès.');
+            
+           return $this->redirectToRoute('app_detailProgramme', ['id'=> $session->getId()]);
+    
+        }
+        // sinon return sur le formulaire pour corriger les ereur
+        return $this->render('session/add_stagiaire.html.twig', [
+            'formAddStagiaire' => $formAddStagiaire->createView(),
+            'session' => $session,
+        ]);
+    }
+
+
+    #[Route('addModuleSession/{id}', name: 'app_addModuleSession')]
+    public function addModulesSession(Session $session, Request $request, EntityManagerInterface $entityManager)
+    {
+        
+        $form = $this->createForm(AddModulesSessionType::class, $session);
+
         $form->handleRequest($request);
 
-        //si le formulaire est soumit et qu'il est valide 
         if ($form->isSubmitted() && $form->isValid()) {
-            $id=$programme->getId();
-             //recdupère les données 
-            $programme = $form->getData();
-            // prepare la requete avec les données du formaulaire
-            $entityManager->persist($programme);
-            // execute PDO la requete
             $entityManager->flush();
-            //redirige  ver la liste des session
-            return $this->redirectToRoute('app_detailProgramme',['id' => $programme->getSession()->getId()]);
+
+            $this->addFlash('success', 'Modules ajoutés à la session avec succès.');
+
+            return $this->redirectToRoute('app_detailProgramme', ['id' => $session->getId()]);
         }
-        //return au formulaire pour corriger les erreur
-        return $this->render('session/new_programme.html.twig', [
-            'formProgramme' => $form,
-            'edit' => $programme->getId(),
+
+        return $this->render('session/add_moduleSession.html.twig', [
+            'form' => $form->createView(),
+            
         ]);
     }
 

@@ -38,12 +38,15 @@ class StagiaireType extends AbstractType
 
                 ]
             ])
-            ->add('genre', ChoiceType::class,[
+            ->add('genre', ChoiceType::class, [
                 'choices' => [
-                    'Homme' => true,
-                    'Femme' => true,
-                    'Autre' => true,
+                    'Homme' => 'Homme',
+                    'Femme' => 'Femme',
+                    'Autre' => 'Autre',
                 ],
+                'expanded' => true, // Affiche les genres comme des checkboxes
+                'multiple' => false, // Permet de n'en sélectionner qu'un seul
+                
             ])
            
 
@@ -62,9 +65,7 @@ class StagiaireType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            // ->add('sessions', CollectionType::class,[
-            //     'entry_type' => SessionStagiaireType::class,
-            // ])
+            
             ->add('Valider', SubmitType::class)
         ;
     }

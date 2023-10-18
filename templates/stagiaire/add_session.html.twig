@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Session{% endblock %}
+
+{% block body %}
+<div class="container">
+
+      <h1>Ajouter des sessions au stagiaire {{ stagiaire.nom }} {{ stagiaire.prenom }}</h1>
+
+    
+    {{ form_start(formAddSession) }}
+        
+                
+               
+    {{ form_label(formAddSession.sessions) }}
+    {{ form_widget(formAddSession.sessions) }}
+    {{ form_errors(formAddSession.sessions) }}
+               
+
+    {{ form_end(formAddSession) }} 
+</div>
+
+{% endblock %}

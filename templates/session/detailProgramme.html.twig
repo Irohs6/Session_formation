@@ -20,24 +20,20 @@
                 {% endif %}
             <li class="detailModule">   
                <p>Module: <h3>{{ programme.module }} </h3></p>
-               <p>Durée {{programme.nbJours}} jours  <a class="btn btn-warning" href="{{ path('edit_programme',{'id':programme.id}) }}">Modifier le programme</a></p>
+               
                  
-              
-            </li>
-           
-            
-        {% endfor %}
-        
+            </li>    
+        {% endfor %}    
     </ul>
     
     <p class="detailModule">
         Liste des personnes inscrite <br>
-        {% for stagiaire in session.stagiaires %}
-            
-                <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}} ;</a>
-            
+        {% for stagiaire in session.stagiaires %}     
+            <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}} ;</a>    
         {% endfor %}
     </p>
     <a class="button" href="{{ path('edit_session',{'id': session.id}) }}">Modifier la session</a>
+    <a class="button" href="{{ path('app_addStagiaire', {'id': session.id})}}">Ajouter un stagiaire</a>
+    <a class="button" href="{{ path('app_addModuleSession', {'id': session.id})}}">Ajouter un module</a>
 </div>
 {% endblock %}

@@ -4,7 +4,10 @@ namespace App\Form;
 
 use App\Entity\Session;
 use App\Entity\Formation;
+use App\Entity\Stagiaire;
 use App\Form\ProgrammeType;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -22,7 +25,8 @@ class SessionType extends AbstractType
         $builder
             ->add('nbPlaceTotal', IntegerType::class,[
                 'attr' =>[ 
-                    'class' => 'form-control'
+                    'class' => 'form-control',
+                    'min' => 1, 'max' => 100,                   
                 ]
             ])
             ->add('dateDebut', DateType::class,[
@@ -42,12 +46,7 @@ class SessionType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            // ->add('formation', EntityType::class, [
-            //     'class' => Formation::class,
-            //     'attr' =>[ 
-            //         'class' => 'form-control'
-            //     ]
-            // ])
+          
             ->add('programmes', CollectionType::class,[
                 //la collection attend l'élément qu'elle entrera dans le form mais pas forcément un formulaire
                 'entry_type' => ProgrammeType::class,
@@ -59,10 +58,23 @@ class SessionType extends AbstractType
                 'by_reference' => false,// il est obligatoire car Session n'a pas de setProgramme mais c'est Programme qui contient setSession
                 //Programme est propriétaire de la relations. Pour éviter un mapping => false on est obligé de rajouter un by_reference => false
             ])
+            ->add('stagiaires', EntityType::class, [
+                'class' => Stagiaire::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('s')
+                        ->orderBy('s.nom', 'ASC');
+                },
+                'choice_label' => 'nom',
+                'multiple' => true, // Changez ici à false pour n'autoriser qu'une seule session à la fois
+                'expanded' => true, // Changez ici à false
+                'attr'=>[
+                    'class' => 'form-check form-check-inline',
+                ]
+            ])
             
             ->add('Valider', SubmitType::class,[
             'attr' =>[ 
-                'class' => 'form-control'
+                'class' => 'button'
             ]
             ])
         ;

@@ -21,12 +21,6 @@ class ModuleType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'attr' =>[ 
-                    'class' => 'form-control'
-                ]
-            ])
             ->add('Valider', SubmitType::class,[
                 'attr' =>[ 
                     'class' => 'form-control'

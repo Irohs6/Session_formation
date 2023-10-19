@@ -15,9 +15,10 @@
         <li class="detail_formation">
             {# lien pour affiché la liste des session de cet formation #}
             <a href="{{ path('app_listeSessionParFormation', {'id': formation.id})}}"><b>{{formation}}:</b>
-            <br> <p>nombre de session disponible: {{ (formation.sessions)|length }} disponible allant de l’initiation a des formations diplômante.</p>{#pour compter le nombre de session disponible#}Info</a> 
+            <br> <p>nombre de session disponible: {{ (formation.sessions)|length }} {{ (formation.sessions)|length < 2 ? ' session disponible' : ' sessions disponibles' }} allant de l’initiation a des formations diplômante.</p>{#pour compter le nombre de session disponible#}Info</a> 
             {# lien pour editer une formation #}
             <a class="btn btn-warning" href="{{ path('edit_formation',{'id': formation.id}) }}">Edit</a>           
+            <a class="btn btn-warning" href="{{ path('delete_formation',{'id': formation.id}) }}">Suprimer</a>           
         </li>
         {% endfor %}
     </ul>

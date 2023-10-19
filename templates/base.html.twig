@@ -43,6 +43,11 @@
             </nav>
         </header>
         <main>
+            {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+            {% endfor %}
         {% block body %}{% endblock %}
         </main>
         

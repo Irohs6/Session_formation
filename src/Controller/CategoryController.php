@@ -28,13 +28,15 @@ class CategoryController extends AbstractController
 
         //Function pour afficher la liste des modules************************************************************
     //Chemin d'accèes a la pages https://127.0.0.1:8000/liste_modules
-    #[Route('liste_modules', name: 'app_listeModule')]
-    public function listeModule(ModuleRepository $moduleRepository): Response
+    #[Route('category/{id}/listModule', name: 'app_listeModule')]
+    public function listeModule(Category $category): Response
     {
-        $modules = $moduleRepository->findAll();//recupéres toutes les données de la table module
+        $modules = $category->getModules();
+
         //renvoie le resultat vers le template session/listeModule
         return $this->render('category/listeModules.html.twig', [
             'modules' => $modules,
+            'category' => $category,
         ]);
     }
 
@@ -48,6 +50,20 @@ class CategoryController extends AbstractController
         return $this->render('category/listecategories.html.twig', [
             'categories' => $categories,
         ]);
+    }
+
+    #[Route('/{id}/delete', name: 'delete_category')]
+    public function deleteCategory(Category $category, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($category);
+        $entityManager->flush();
+
+        $this->addFlash(
+            'notice',
+            'Category supprimé!'
+        );
+
+        return $this->redirectToRoute('app_listeStagiaire');
     }
     /*********Ajout ou edit d'une catégory**************************************************************************** */
     //chemin pour une créations
@@ -83,14 +99,20 @@ class CategoryController extends AbstractController
         ]);
     }
 /**Ajout ou Modifier un Modules************************************************************ */
-    #[Route('module/new', name: 'new_module')]
+    #[Route('module/new/{idCategory}', name: 'new_module')]
     #[Route('module/{id}/edit', name: 'edit_module')]
-    public function newModule(Module $module = null, Request $request, EntityManagerInterface $entityManager): Response
+    public function newModule(Module $module = null, Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
     {
         //si module n'éxiste pas crer une nouvelle instance
         if(!$module){
             $module = new Module();
+            $idCategory = $request->attributes->get('idCategory'); //on recupère l'id de la formation contenu dans l'url
+            $category = $categoryRepository->findOneBy(['id'=> $idCategory]);//on récupère la category grace a cet id
+        }else{
+            $category = $module->getCategory();// si la sessio existe déja on recupère sa CatgeorgetCategory
         }
+    
+        $module->setCategory($category); // on inclu la session existante ou la nouvelle dans sa formation
 
         $form = $this->createForm(ModuleType::class, $module);//creer le formulaire
 
@@ -106,7 +128,7 @@ class CategoryController extends AbstractController
             // execute PDO la requete update ou insert
             $entityManager->flush();
             //retrun a liste module si tous c'est bien passée
-            return $this->redirectToRoute('app_listeModule');
+            return $this->redirectToRoute('app_listeModule',['id'=>$category->getId()]);
         }
         //sinon return sur le formulaire
         return $this->render('category/new_Module.html.twig', [
@@ -114,6 +136,21 @@ class CategoryController extends AbstractController
             'edit' => $module->getId(),
         ]);
     }
+
+    #[Route('/{id}/deleteModule', name: 'delete_module')]
+    public function deleteModule(Module $module, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($module);
+        $entityManager->flush();
+
+        $this->addFlash(
+            'notice',
+            'Module supprimé!'
+        );
+
+        return $this->redirectToRoute('app_listeModule',['id'=>$module->getCategory()->getId()]);
+    }
+   
 }
 
 

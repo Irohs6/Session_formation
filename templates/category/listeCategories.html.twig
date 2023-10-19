@@ -10,8 +10,11 @@
     <ul>
         {% for categorie in categories %}
             <li>
-                {{categorie}}
+                
+                <a  href="{{ path('app_listeModule',{'id': categorie.id}) }}">{{categorie}}</a> 
                 <a class="btn btn-warning" href="{{ path('edit_category',{'id': categorie.id}) }}">Edit</a> 
+                <a class="btn btn-warning" href="{{ path('delete_category',{'id': categorie.id}) }}">Suprimer</a> 
+                <p>nombre de module dans cet catégorie: {{ (categorie.modules)|length }} {{ (categorie.modules)|length < 2 ? ' module disponible' : ' modules disponibles' }} allant de l’initiation a des formations diplômante.</p>{#pour compter le nombre de module disponible#}</a> 
             </li>
         {% endfor %}
   

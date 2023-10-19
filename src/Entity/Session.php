@@ -32,11 +32,10 @@ class Session
     #[ORM\JoinColumn(nullable: false)]
     private ?Formation $formation = null;
 
-    #[ORM\ManyToMany(targetEntity: Stagiaire::class, inversedBy: 'sessions', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToMany(targetEntity: Stagiaire::class, inversedBy: 'sessions')]
     private Collection $stagiaires;
 
     #[ORM\OneToMany(mappedBy: 'session', targetEntity: Programme::class, cascade: ['persist', 'remove'], orphanRemoval:true )]
-    #[ORM\OrderBy(['module' => 'ASC'])]
     private Collection $programmes;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
@@ -184,4 +183,20 @@ class Session
 
         return $this;
     }
+
+   
+    public function getEtat()
+    {
+        $now = new \DateTime();
+        if($this->dateFin->format('Y-m-d') < $now->format('Y-m-d')) {
+            $message = 'Terminé';
+        }elseif($this->dateDebut < $now && $this->dateFin > $now){
+            $message = 'En cours';
+        }else{
+            $message = 'a  venir';
+        }
+       
+        return;
+    }
+
 }

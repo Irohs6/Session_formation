@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Stagiaire;
+use App\Entity\Session;
 use App\Form\StagiaireType;
 use App\Form\SessionAddType;
 use App\Repository\StagiaireRepository;
@@ -53,15 +54,24 @@ class StagiaireController extends AbstractController
         if(!$stagiaire){
             $stagiaire = new Stagiaire();
         }
-       
+        
         $form = $this->createForm(StagiaireType::class, $stagiaire);//créer le formulaire 
         //recupère les données du formulaire si il a été soumis et les valide
-        $form->handleRequest($request);
+        $sessionStagiaire = $stagiaire->getSessions();//pour récupérer le ssession du stagiaire
+        foreach ($sessionStagiaire as $session) {
+            $stagiaire->removeSession($session); // on retire les session du stagaire après la création du formaulaire et avant sa validation
+        }
+        $form->handleRequest($request); //le formulaire est soumit et vérifier
 
         //si le formulaire est soumit et qu'il est valide 
         if ($form->isSubmitted() && $form->isValid()) {
              //recdupère les données 
-            $stagiaire = $form->getData();
+            $data = $form->getData();
+
+            $sessions = $data->getSessions();//on récupère les session selectionné sur le formulaire
+            foreach ($sessions as $session) {
+                $session->addStagiaire($stagiaire);  //on ajoute le stagiaire pour chaque session
+            }
             // prepare la requete avec les données du formaulaire
             $entityManager->persist($stagiaire);
             // execute PDO la requete
@@ -72,8 +82,22 @@ class StagiaireController extends AbstractController
         //sinon return sur le formulaire pour corriger les ereur
         return $this->render('stagiaire/new_stagiaire.html.twig', [
             'formStagiaire' => $form,// pour la création du formulaire
-            'edit' => $stagiaire->getId(),//envoit l'id de stafiaire pour confirmer si modifier ou ajouter          
+            'edit' => $stagiaire->getId(),//envoit l'id de stafiaire pour confirmer si modifier ou ajouter   
+            'stagiaireId' => $stagiaire->getId()       
         ]);
+    }
+    #[Route('stagiaire/{id}/delete', name: 'delete_stagiaire')]
+    public function deleteStagiaire(Stagiaire $stagiaire, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($stagiaire);
+        $entityManager->flush();
+
+        $this->addFlash(
+            'notice',
+            'Stagiaire supprimé!'
+        );
+
+        return $this->redirectToRoute('app_listeStagiaire');
     }
 
       /****************************Ajout de session a 1 stagiaire ne marche pas************************************************************* */

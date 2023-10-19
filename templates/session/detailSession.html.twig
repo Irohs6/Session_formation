@@ -13,13 +13,14 @@
     <p class="information">Détail des modules:</p>
     <ul>
         {% for programme in session.programmes %}
-            {% if programme.module.category != category %}
+        {% if programme.module.category != category %}
                  {% set category = programme.module.category %}
             
                 <p><b>{{ programme.module.category }}:</b></p>
                 {% endif %}
             <li class="detailModule">   
                <p>Module: <h3>{{ programme.module }} </h3></p>
+               <p>Durée: {{ programme.nbJours }} {{ (programme.nbJours) < 2 ? 'jour' : 'jours' }} </p>
                
                  
             </li>    
@@ -33,7 +34,6 @@
         {% endfor %}
     </p>
     <a class="button" href="{{ path('edit_session',{'id': session.id}) }}">Modifier la session</a>
-    <a class="button" href="{{ path('app_addStagiaire', {'id': session.id})}}">Ajouter un stagiaire</a>
-    <a class="button" href="{{ path('app_addModuleSession', {'id': session.id})}}">Ajouter un module</a>
+    <a class="btn btn-warning" href="{{ path('delete_session',{'id': session.id}) }}">Suprimer</a>
 </div>
 {% endblock %}

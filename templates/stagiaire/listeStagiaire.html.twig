@@ -12,10 +12,11 @@
             <li>
                 <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}}</a>
                 <a class="btn btn-warning" href="{{ path('edit_stagiaire',{'id':stagiaire.id}) }}">Edit</a>
+                <a class="btn btn-warning" href="{{ path('delete_stagiaire',{'id': stagiaire.id}) }}">Suprimer</a>
             </li>
         {% endfor %}
   
     </ul>
-    <a href="{{ path('new_stagiaire') }}">Ajouter une stagiaire</a>
+    <a class="button" href="{{ path('new_stagiaire') }}">Ajouter une stagiaire</a>
 </div>
 {% endblock %}

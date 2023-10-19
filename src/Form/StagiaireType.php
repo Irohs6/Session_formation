@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Form;
-
+use App\Entity\Session;
 use App\Entity\Stagiaire;
-use App\Form\SessionStagiaireType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -63,6 +63,15 @@ class StagiaireType extends AbstractType
             ->add('tel', TextType::class,[
                 'attr' =>[ 
                     'class' => 'form-control'
+                ]
+            ])
+            ->add('sessions', EntityType::class, [
+                'class' => Session::class,
+                'choice_label' => 'intitule',
+                'multiple' => true, // Changez ici à false pour n'autoriser qu'une seule session à la fois
+                'expanded' => true, // Changez ici à false
+                'attr'=>[
+                    'class' => 'form-check form-check-inline',
                 ]
             ])
             

@@ -19,22 +19,24 @@
                     <td>Détail du programme</td>
                 </tr>
                 {% for session in sessions %}
-                
-                    <tr>
-                        <td>{{session}}</td>
-                        <td>{{session.dateDebut | date('d/m/Y')}}</td>
-                        <td>{{session.dateFin | date('d/m/Y')}}</td>
-                        <td>{{session.etat}}</td>
-                        <td>{{session.nbPlaceTotal}}</td>
-                        <td>{{ session.nbPlaceTotal - session.stagiaires|length }}</td>
-                        <td>
-                            <a href="{{ path('app_detailSession', {'id': session.id})}}"><img class="detailProgramme" src="{{ asset('img/detail_programme.jpg')}}" alt="Détail du programmes"></a>
-                            <a class="btn btn-warning" href="{{ path('edit_session',{'id': session.id}) }}">Edit</a>
-                            
-                        </td>
-                    
-                    </tr> 
+                    {% if session.etat != 'Terminé' %}
                         
+                    
+                        <tr>
+                            <td>{{session}}</td>
+                            <td>{{session.dateDebut | date('d/m/Y')}}</td>
+                            <td>{{session.dateFin | date('d/m/Y')}}</td>
+                            <td>{{session.etat}}</td>
+                            <td>{{session.nbPlaceTotal}}</td>
+                            <td>{{ session.nbPlaceTotal - session.stagiaires|length }}</td>
+                            <td>
+                                <a href="{{ path('app_detailSession', {'id': session.id})}}"><img class="detailProgramme" src="{{ asset('img/detail_programme.jpg')}}" alt="Détail du programmes"></a>
+                                <a class="btn btn-warning" href="{{ path('edit_session',{'id': session.id}) }}">Edit</a>
+                                
+                            </td>
+                        
+                        </tr> 
+                    {% endif %}    
                 {% endfor %}
             </table>
         </div>

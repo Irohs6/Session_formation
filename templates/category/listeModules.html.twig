@@ -15,6 +15,7 @@
             <li>
                 {{module}}
                 <a class="btn btn-warning" href="{{ path('edit_module',{'id': module.id}) }}">Edit</a> 
+                <a class="btn btn-warning" href="{{ path('delete_module',{'id': module.id}) }}">Suprimer</a> 
             </li>
         {% endfor %}
             

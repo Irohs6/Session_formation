@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une Session{% endblock %}
+{% block title %}Ajouter ou modifier une Session{% endblock %}
 
 {% block body %}
 <div class="container">
     {% if edit %}
         <h1>Modifier la Session: {{ session }}</h1>
     {% else %}
-        <h1>Ajouter une Session</h1>
+        <h1>Ajouter une Session a la formation {{ formation }}</h1>
     {% endif %}
     
     {{ form_start(form) }}
@@ -45,6 +45,34 @@
     
         {# empêche l'apparition d'une légende "programmes", si la collection est vide (en cas de création d'une nouvelle session) #}
         {% do form.programmes.setRendered %}
+
+        {# on va construire dynamiquement la liste des stagiaire existants a partir de Stagiaire #}
+        <h2>Stagiaire de la Session:</h2>
+        <div class="form-group row ">
+            <div class="col-form-label col-sm-2">&nbsp;</div>
+            <div id="stagiaire-fields-list" class="col-sm-10 remove-collection-widget"
+                data-prototype="{{ form_widget(form.stagiaires.vars.prototype)|e }}"
+                data-session="{{sessionId}}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ form.stagiaires|length }}">
+            {% for stagiaireField in form.stagiaires %}
+                <p>
+                    {{ form_errors(stagiaireField) }}
+                    {{ form_widget(stagiaireField, {'attr': {'class': 'borders'}}) }}
+                </p>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="form-group row flex-action">
+            <button type="button" 
+                class="add-another-collection-widget button"
+                data-list-selector="#stagiaire-fields-list">Ajouter un nouveau stagiaire</button>
+        </div>
+    
+     
+    
+        {# empêche l'apparition d'une légende "stagiaires", si la collection est vide (en cas de création d'une nouvelle session) #}
+        {% do form.stagiaires.setRendered %}
     {{ form_end(form) }}
 </div>
 {% endblock %}

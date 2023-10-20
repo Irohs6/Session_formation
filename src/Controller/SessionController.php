@@ -133,7 +133,7 @@ class SessionController extends AbstractController
             $idFormation = $request->attributes->get('idFormation'); //on recupère l'id de la formation contenu dans l'url
             $formation = $formationRepository->findOneBy(['id'=> $idFormation]);//on récupère la formation grace a cet id
         }else{
-            $formation = $session->getFormation();// si la sessio existe déja on recupère sa formation
+            $formation = $session->getFormation();// si la session existe déja on recupère sa formation
         }
 
         $session->setFormation($formation); // on inclu la session existante ou la nouvelle dans sa formation
@@ -161,6 +161,7 @@ class SessionController extends AbstractController
             'edit' => $session->getId(),
             'sessionId' => $session->getId(),
             'session' => $session,
+            'formation' => $formation,
         ]);
     }  
 

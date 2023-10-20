@@ -33,7 +33,7 @@ class Session
     #[ORM\JoinColumn(nullable: false)]
     private ?Formation $formation = null;
 
-    #[ORM\ManyToMany(targetEntity: Stagiaire::class, inversedBy: 'sessions')]
+    #[ORM\ManyToMany(targetEntity: Stagiaire::class, inversedBy: 'sessions', cascade: ['persist', 'remove'])]
     private Collection $stagiaires;
 
     #[ORM\OneToMany(mappedBy: 'session', targetEntity: Programme::class, cascade: ['persist', 'remove'], orphanRemoval:true )]

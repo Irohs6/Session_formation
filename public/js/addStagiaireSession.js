@@ -37,15 +37,6 @@ $(document).ready(function() { // Une fois que le document (base.html.twig) HTML
             $moduleForm.remove()
         })
     }
-    // fonction permettant l'ajout d'un bouton "Supprimer ce stagiaire" dans un bloc "programme", et d'enregistrer l'évenement "click" associé
-    function addDeleteLink($stagiaireForm) {
-        var $removeFormButton = $('<div class="block"><button type="button" class="button">Supprimer ce module</button></div>');
-        $stagiaireForm.append($removeFormButton)
-    
-        $removeFormButton.on('click', function(e) {
-            $stagiaireForm.remove()
-        })
-    }
     // remove-session.js : fonction permettant de demander la confirmation de suppression d'une session
     $('.remove-session-confirm').on('click', function(e) {
         e.preventDefault()

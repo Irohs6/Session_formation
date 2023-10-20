@@ -50,12 +50,17 @@ class SessionController extends AbstractController
 
     //Pour afficher la liste des session trier par formation(dev, bureautique,.....)
     #[Route('/session/listeSession{id}', name: 'app_listeSessionParFormation')]
-    public function listeSessionParFormation(Formation $formation): Response
+    public function listeSessionParFormation(Formation $formation, EntityManagerInterface $entityManager): Response
     {
+        $sessions = $entityManager->getRepository(Session::class)->findBy(
+            ['formation' => $formation],
+            ['dateDebut' => 'ASC'] // Tri par date de début en ordre croissant
+        );
         
         //renvoie le liste des session contenu dans une formation par son identifiant 
         return $this->render('session/listeSessionParFormation.html.twig', [
             'formation' => $formation,
+            'sessions' => $sessions,
             
         ]);
     }    

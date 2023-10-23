@@ -31,7 +31,7 @@
                             <td>{{ session.nbPlaceTotal - session.stagiaires|length }}</td>
                             <td>
                                 <a href="{{ path('app_detailSession', {'id': session.id})}}"><img class="detailProgramme" src="{{ asset('img/detail_programme.jpg')}}" alt="Détail du programmes"></a>
-                                <a class="btn btn-warning" href="{{ path('edit_session',{'id': session.id}) }}">Edit</a>
+                                <a class="btn btn-warning" href="{{ path('edit_session',{'id': session.id }) }}">Edit</a>
                                 
                             </td>
                         

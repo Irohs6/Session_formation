@@ -37,7 +37,7 @@ class Stagiaire
     #[ORM\Column(length: 15)]
     private ?string $tel = null;
 
-    #[ORM\ManyToMany(targetEntity: Session::class, mappedBy: 'stagiaires')]
+    #[ORM\ManyToMany(targetEntity: Session::class, mappedBy: 'stagiaires', cascade: ['persist'])]
     private Collection $sessions;
 
     public function __construct()
@@ -163,7 +163,7 @@ class Stagiaire
 
     public function __toString()
     {
-        return $this->nom." ".$this->prenom;
+        return $this->nom;
     }
 
     public function getAge()

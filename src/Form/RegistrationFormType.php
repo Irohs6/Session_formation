@@ -19,10 +19,23 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('email', EmailType::class)
-        ->add('nom', TextType::class)
-        ->add('prenom', TextType::class)
+        ->add('email', EmailType::class,[ 
+            'attr' =>[ 
+                'class' => 'form-control'
+            ]
+        ])
+        ->add('nom', TextType::class,[ 
+            'attr' =>[ 
+                'class' => 'form-control'
+            ]
+        ])
+        ->add('prenom', TextType::class,[ 
+            'attr' =>[ 
+                'class' => 'form-control'
+            ]
+        ])
         ->add('agreeTerms', CheckboxType::class, [
+
             'mapped' => false,
             'constraints' => [
                 new IsTrue([
@@ -31,13 +44,21 @@ class RegistrationFormType extends AbstractType
             ],
         ])
         ->add('plainPassword', RepeatedType::class, [
+           
             'constraints' => [
-            new Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,64}$^/')
+            new Regex([
+                'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,64}$/',
+                'message' => 'Votre mdp doit contenir au minimum 12 caractère dont 1 lettre majuscule, 1 lettre minuscule, 1 chiffre et 1 caractère spécial.'])
             ],
             'mapped' => false,
             'type' => PasswordType::class,
-            'invalid_message' => 'The password fields must match.',
-            'options' => ['attr' => ['class' => 'password-field']],
+            'invalid_message' => 'Les password doivent ètre identique.',
+            'options' => [
+                'attr' => [
+                    'class' => 'password-field',
+                    'class' => 'form-control'
+                ]
+            ],
             'required' => true,
             'first_options'  => ['label' => 'Password'],
             'second_options' => ['label' => 'Repeat Password']

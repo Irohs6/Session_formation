@@ -26,7 +26,34 @@
         {{ form_row(formStagiaire.ville) }}
         {{ form_row(formStagiaire.tel) }}
 
-      
+        {# on va construire dynamiquement la liste des stagiaire existants a partir de Stagiaire #}
+        {# <h2>Stagiaire de la Session:</h2>
+        <div class="form-group row ">
+            <div class="col-form-label col-sm-2">&nbsp;</div>
+            <div id="session-fields-list" class="col-sm-10 remove-collection-widget"
+                data-prototype="{{ form_widget(formStagiaire.sessions.vars.prototype)|e }}"
+                data-session="{{stagiaireId}}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ formStagiaire.sessions|length }}">
+            {% for sessionField in formStagiaire.sessions %}
+            
+                <p>
+                    {{ form_errors(sessionField) }}
+                    {{ form_widget(sessionField, {'attr': {'class': 'borders'}}) }}
+                </p>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="form-group row flex-action">
+            <button type="button" 
+                class="add-another-collection-widget button"
+                data-list-selector="#session-fields-list">Ajouter un nouveau stagiaire</button>
+        </div>
+     #}
+     
+    
+        {# empêche l'apparition d'une légende "stagiaires", si la collection est vide (en cas de création d'une nouvelle session) #}
+        {# {% do form.stagiaires.setRendered %} #}
     {{ form_end(formStagiaire) }}
 </div>
 {% endblock %}

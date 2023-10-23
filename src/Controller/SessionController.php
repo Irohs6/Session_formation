@@ -13,6 +13,7 @@ use App\Form\ModuleSessionType;
 use App\Form\AddModulesSessionType;
 use App\Repository\FormationRepository;
 use App\Repository\SessionRepository;
+use App\Repository\StagiaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,7 +125,7 @@ class SessionController extends AbstractController
 /******Ajout et Modification d'une session*********************************************** */
     #[Route('session/{idFormation}/new', name: 'new_session')]
     #[Route('session/{id}/edit', name: 'edit_session')]
-    public function newSession(Session $session = null, Request $request, EntityManagerInterface $entityManager, FormationRepository $formationRepository): Response
+    public function newSession(Session $session = null, Request $request, EntityManagerInterface $entityManager, FormationRepository $formationRepository, StagiaireRepository $stagiaireRepository): Response
     {   
         
         if(!$session){
@@ -133,20 +134,28 @@ class SessionController extends AbstractController
             $idFormation = $request->attributes->get('idFormation'); //on recupère l'id de la formation contenu dans l'url
             $formation = $formationRepository->findOneBy(['id'=> $idFormation]);//on récupère la formation grace a cet id
         }else{
+            
             $formation = $session->getFormation();// si la session existe déja on recupère sa formation
-        }
 
-        $session->setFormation($formation); // on inclu la session existante ou la nouvelle dans sa formation
+        }
        
-        $form = $this->createForm(SessionType::class, $session);//creer le formulaire
+        $session->setFormation($formation); // on inclu la session existante ou la nouvelle dans sa formation
         
+       
+
+        $form = $this->createForm(SessionType::class, $session);//creer le formulaire
         //recupère les données du formulaire si il a été soumis et validé
         $form->handleRequest($request);
-        //si le formulaire est soumit et valide 
         
-        if ($form->isSubmitted() && $form->isValid()) {
+        //si le formulaire est soumit et valide 
+        $nbPlaceRestante = $session->getnbPlaceTotal() - count($session->getStagiaires());
+        // dd($nbPlaceRestante);
+        // die;
+        if ($form->isSubmitted() && $form->isValid() && $nbPlaceRestante >= 0 ) {
             //récupère les donné du formulaire 
-            $session = $form->getData();
+            $sessions = $form->getData();
+            
+
             // prepare PDO la requete insert ou update
             $entityManager->persist($session);
             // execute PDO la requete insert ou update
@@ -157,7 +166,7 @@ class SessionController extends AbstractController
         }
         // sinon return sur le formulaire pour corriger les ereur
         return $this->render('session/new_session.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
             'edit' => $session->getId(),
             'sessionId' => $session->getId(),
             'session' => $session,
@@ -173,12 +182,26 @@ class SessionController extends AbstractController
         $entityManager->remove($session);
         $entityManager->flush();
 
-        $this->addFlash(
-            'notice',
-            'Session supprimé!'
-        );
 
         return $this->redirectToRoute('app_home');
+      
+          
+    }  
+
+    #[Route('session/{id}/unset_module', name: 'app_unsetModule')]
+    public function unsetModule(Programme $programme, EntityManagerInterface $entityManager): Response
+    {   
+       $module = $programme->getModule();
+       $session = $programme->getSession();
+        $session->removeProgramme($programme);
+        $module->removeProgramme($programme);
+        $entityManager->persist($programme);
+        // execute PDO la requete insert ou update
+        $entityManager->flush();
+
+       
+      
+        return $this->redirectToRoute('app_detailSession', ['id'=> $session->getId()]);
       
           
     }  

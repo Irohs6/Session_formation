@@ -6,7 +6,7 @@
 {% set category = "" %}
 <div class="example-wrapper">
 
-    <h1>Détail du programme d'une session {{session}}</h1>
+    <h1>Détail du programme de la session {{session}}</h1>
 
     <p class="information">du {{session.dateDebut | date('m/d/Y')}} au {{session.dateFin | date('m/d/Y')}} {#affiche la date de debut et de fin de la session#}</p>
   
@@ -21,6 +21,7 @@
             <li class="detailModule">   
                <p>Module: <h3>{{ programme.module }} </h3></p>
                <p>Durée: {{ programme.nbJours }} {{ (programme.nbJours) < 2 ? 'jour' : 'jours' }} </p>
+               <a class="btn btn-warning" href="{{ path('app_unsetModule', {'id': programme.id})}}">Enlever</a>
                
                  
             </li>    
@@ -29,11 +30,13 @@
     
     <p class="detailModule">
         Liste des personnes inscrite <br>
+        {% set count = 1 %}
         {% for stagiaire in session.stagiaires %}     
-            <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{stagiaire}} ;</a>    
+            <a href="{{ path('app_detailStagiaire', {'id': stagiaire.id})}}">{{ stagiaire }} <a class="btn btn-warning" href="{{ path('app_unsetStagiaire',{'id' : session.id ,'idStagiaire': stagiaire.id})}}">Enlever</a>  {{ (session.stagiaires)|length != count ? ' ,' : '.' }} </a>  
+            {% set count = count + 1 %}            
         {% endfor %}
     </p>
     <a class="button" href="{{ path('edit_session',{'id': session.id}) }}">Modifier la session</a>
-    <a class="btn btn-warning" href="{{ path('delete_session',{'id': session.id}) }}">Suprimer</a>
+    <a class="button" href="{{ path('delete_session',{'id': session.id}) }}">Suprimer</a>
 </div>
 {% endblock %}

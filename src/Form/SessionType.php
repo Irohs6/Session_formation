@@ -59,30 +59,7 @@ class SessionType extends AbstractType
                 'by_reference' => false,// il est obligatoire car Session n'a pas de setProgramme mais c'est Programme qui contient setSession
                 //Programme est propriétaire de la relations. Pour éviter un mapping => false on est obligé de rajouter un by_reference => false
             ])
-            ->add('stagiaires', CollectionType::class,[
-                //la collection attend l'élément qu'elle entrera dans le form mais pas forcément un formulaire
-                'entry_type' => SessionAddStagiaireType::class,
-                'prototype' => true,
-                //autoriser l'ajout de nouveau élément qui seront persiter grace au cascade persit sur l'élément Programme
-                //ca va va activer un data prototype qui sera un attribut html qu'on pourra manipuler en js
-                'allow_add' => true, //autorise l'ajout 
-                'allow_delete' => true, //autorise la suppression
-                'by_reference' => false,// il est obligatoire car Session n'a pas de setProgramme mais c'est Programme qui contient setSession
-                //Programme est propriétaire de la relations. Pour éviter un mapping => false on est obligé de rajouter un by_reference => false
-            ])
-            // ->add('stagiaires', EntityType::class, [
-            //     'class' => Stagiaire::class,
-            //     'query_builder' => function (EntityRepository $er): QueryBuilder {
-            //         return $er->createQueryBuilder('s')
-            //             ->orderBy('s.nom', 'ASC');
-            //     },
-            //     'choice_label' => 'nom',
-            //     'multiple' => true, // Changez ici à false pour n'autoriser qu'une seule session à la fois
-            //     'expanded' => true, // Changez ici à false
-            //     'attr'=>[
-            //         'class' => 'form-check form-check-inline',
-            //     ]
-            // ])
+          
             
             ->add('Valider', SubmitType::class,[
             'attr' =>[ 

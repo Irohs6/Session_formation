@@ -134,5 +134,24 @@ class StagiaireController extends AbstractController
           ]);
       }
 
+      #[Route('session/{id}/{idStagiaire}/unset_stagiaire', name: 'app_unsetStagiaire')]
+    public function unsetStagiaire(Session $session,Request $request, EntityManagerInterface $entityManager, StagiaireRepository $stagiaireRepository): Response
+    {   
 
+        $idStagiaire = $request->attributes->get('idStagiaire'); //on recupère l'id de la formation contenu dans l'url
+        $stagiaire = $stagiaireRepository->findOneBy(['id'=> $idStagiaire]);//on récupère la formation grace a cet id
+       
+       
+        $stagiaire->removeSession($session);
+        
+        $entityManager->persist($stagiaire);
+        // execute PDO la requete insert ou update
+        $entityManager->flush();
+
+       
+      
+        return $this->redirectToRoute('app_detailSession', ['id'=> $session->getId()]);
+      
+          
+    }  
 }
